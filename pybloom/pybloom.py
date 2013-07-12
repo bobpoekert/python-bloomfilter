@@ -18,6 +18,11 @@ Requires the bitarray library: http://pypi.python.org/pypi/bitarray/
     True
     >>> (1.0 - (len(f) / float(f.capacity))) <= f.error_rate + 2e-18
     True
+    >>> f.reset()
+    >>> 0 in f
+    False
+    >>> len(f)
+    0
 
     >>> from pybloom import ScalableBloomFilter
     >>> sbf = ScalableBloomFilter(mode=ScalableBloomFilter.SMALL_SET_GROWTH)
@@ -124,6 +129,11 @@ class BloomFilter(object):
         self._setup(error_rate, num_slices, bits_per_slice, capacity, 0)
         self.bitarray = bitarray.bitarray(self.num_bits, endian='little')
         self.bitarray.setall(False)
+
+    def reset(self):
+        "Sets all bits of bloom filter to zero."
+        self.bitarray.setall(False)
+        self.count = 0
 
     def _setup(self, error_rate, num_slices, bits_per_slice, capacity, count):
         self.error_rate = error_rate
